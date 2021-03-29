@@ -8,12 +8,13 @@ const DynamoDBService = new AWS.DynamoDB()
  */
 module.exports.backup = async () => {
   const tablesInfo = await DynamoDBService.listTables().promise()
+  // return JSON.stringify(tablesInfo)
   return await Promise.all(getAllProdTables(tablesInfo))
   
 }
 
 const getAllProdTables = tables => {
-  if (!tables || !tables.data.TableNames) {
+  if (!tables || !tables.TableNames) {
     throw new TypeError('Tables are required')
   }
 
@@ -30,7 +31,7 @@ const getAllProdTables = tables => {
     console.log('Table name', tableName, 'backed up with the name', backupName)
     return backup
   }
-  const backup = createBackup(`manual-backup-${new Date()}`)
-  return tables.data.TableNames.filter(isProdTable).map(backup)
+  const backup = createBackup(`manual-backup-${new Date().toISOString()}`)
+  return tables.TableNames.filter(isProdTable).map(backup)
 
 }

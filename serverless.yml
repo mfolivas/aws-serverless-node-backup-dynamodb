@@ -14,13 +14,16 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:dynamodb:ListTables
+        - dynamodb:ListTables
       Resource:
         - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/*
 
 functions:
   backup:
     handler: handler.backup
+    events:
+      - eventBridge:
+          schedule: rate(1 day)
 
 resources:
   Resources:
