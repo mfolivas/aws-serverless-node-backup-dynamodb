@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/mfolivas/aws-serverless-node-backup-dynamodb#readme",
   "devDependencies": {
-    "aws-cdk": "^1.95.1"
+    "aws-sdk": "^2.874.0"
+  },
+  "dependencies": {
+    "serverless-pseudo-parameters": "^2.5.0"
   }
 }

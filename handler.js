@@ -1,13 +1,13 @@
 'use strict';
 
-const AWS = require('aws-cdk')
-const DynamoDBService = new AWS.DynamoDB.DocumentClient()
+const AWS = require('aws-sdk')
+const DynamoDBService = new AWS.DynamoDB()
 
 /**
  * The application should perform the entire backup of the databases
  */
 module.exports.backup = async () => {
-  const tablesInfo = DynamoDBService.listTables().promise()
+  const tablesInfo = await DynamoDBService.listTables().promise()
   return await Promise.all(getAllProdTables(tablesInfo))
   
 }
