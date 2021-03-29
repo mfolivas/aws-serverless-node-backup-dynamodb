@@ -1,0 +1,22 @@
+{
+  "name": "aws-serverless-node-backup-dynamodb",
+  "version": "1.0.0",
+  "description": "The application reads all the dynamodb tables from a given \"prod\" stage environment and backups the data.",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mfolivas/aws-serverless-node-backup-dynamodb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mfolivas/aws-serverless-node-backup-dynamodb/issues"
+  },
+  "homepage": "https://github.com/mfolivas/aws-serverless-node-backup-dynamodb#readme",
+  "devDependencies": {
+    "aws-cdk": "^1.95.1"
+  }
+}

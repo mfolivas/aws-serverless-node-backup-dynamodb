@@ -1,18 +1,36 @@
 'use strict';
 
-module.exports.backup = async (event) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+const AWS = require('aws-cdk')
+const DynamoDBService = new AWS.DynamoDB.DocumentClient()
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
-};
+/**
+ * The application should perform the entire backup of the databases
+ */
+module.exports.backup = async () => {
+  const tablesInfo = DynamoDBService.listTables().promise()
+  return await Promise.all(getAllProdTables(tablesInfo))
+  
+}
+
+const getAllProdTables = tables => {
+  if (!tables || !tables.data.TableNames) {
+    throw new TypeError('Tables are required')
+  }
+
+  const isProdTable = name => name.endsWith('-prod')
+  const createBackup = backupName => tableName => {
+    if (!backupName || !tableName) {
+      throw new TypeError('The backup name and table name are required')
+    }
+    const backup = {
+      BackupName: backupName,
+      TableName: tableName
+    }
+    DynamoDBService.createBackup(backup).promise()
+    console.log('Table name', tableName, 'backed up with the name', backupName)
+    return backup
+  }
+  const backup = createBackup(`manual-backup-${new Date()}`)
+  return tables.data.TableNames.filter(isProdTable).map(backup)
+
+}

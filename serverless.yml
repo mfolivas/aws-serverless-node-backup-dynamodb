@@ -11,7 +11,7 @@ provider:
 
 
 functions:
-  hello:
+  backup:
     handler: handler.backup
 
 resources:
