@@ -8,7 +8,6 @@ const DynamoDBService = new AWS.DynamoDB()
  */
 module.exports.backup = async () => {
   const tablesInfo = await DynamoDBService.listTables().promise()
-  // return JSON.stringify(tablesInfo)
   return await getAllProdTables(tablesInfo)
   
 }
