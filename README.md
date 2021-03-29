@@ -12,4 +12,4 @@ sls deploy
 sls invoke -f backup
 ```
 
-You should see two tables backed up.
+You should see two tables backed up.  You should go to your dynamodb and see the backup.

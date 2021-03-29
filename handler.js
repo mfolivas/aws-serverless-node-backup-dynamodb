@@ -9,29 +9,36 @@ const DynamoDBService = new AWS.DynamoDB()
 module.exports.backup = async () => {
   const tablesInfo = await DynamoDBService.listTables().promise()
   // return JSON.stringify(tablesInfo)
-  return await Promise.all(getAllProdTables(tablesInfo))
+  return await getAllProdTables(tablesInfo)
   
 }
 
-const getAllProdTables = tables => {
+const getAllProdTables = async tables => {
   if (!tables || !tables.TableNames) {
     throw new TypeError('Tables are required')
   }
 
-  const isProdTable = name => name.endsWith('-prod')
-  const createBackup = backupName => tableName => {
-    if (!backupName || !tableName) {
-      throw new TypeError('The backup name and table name are required')
-    }
-    const backup = {
-      BackupName: backupName,
-      TableName: tableName
-    }
-    DynamoDBService.createBackup(backup).promise()
-    console.log('Table name', tableName, 'backed up with the name', backupName)
-    return backup
-  }
-  const backup = createBackup(`manual-backup-${new Date().toISOString()}`)
-  return tables.TableNames.filter(isProdTable).map(backup)
+  const dateYearMonthDayFormatted = backupName(new Date())
+  const backup = createBackup(dateYearMonthDayFormatted)
+  return await Promise.all(tables.TableNames
+    .filter(isProdTable)
+    .map(backup))
 
+}
+
+const backupName = date => date.toISOString().split('T')[0]
+
+const isProdTable = name => name.endsWith('-prod')
+
+const createBackup = backupName => async tableName => {
+  if (!backupName || !tableName) {
+    throw new TypeError('The backup name and table name are required')
+  }
+  const backup = {
+    BackupName: backupName,
+    TableName: tableName
+  }
+  await DynamoDBService.createBackup(backup).promise()
+  console.log('Table name', tableName, 'backed up with the name', backupName)
+  return backup
 }

@@ -15,6 +15,7 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:ListTables
+        - dynamodb:CreateBackup
       Resource:
         - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/*
 
